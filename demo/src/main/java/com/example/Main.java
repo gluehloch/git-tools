@@ -19,8 +19,12 @@ import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.TransportConfigCallback;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.transport.*;
-import org.eclipse.jgit.transport.OpenSshConfig.Host;
+import org.eclipse.jgit.transport.Transport;
+// import org.eclipse.jgit.transport.OpenSshConfig;
+import org.eclipse.jgit.transport.SshSessionFactory;
+import org.eclipse.jgit.transport.SshTransport;
+import org.eclipse.jgit.transport.ssh.jsch.JschConfigSessionFactory;
+import org.eclipse.jgit.transport.ssh.jsch.OpenSshConfig.Host;
 import org.eclipse.jgit.util.FS;
 
 public class Main {
@@ -49,13 +53,7 @@ public class Main {
 
 		CloneCommand cloneCommand = Git.cloneRepository();
 		cloneCommand.setURI(remotePath);
-		cloneCommand.setTransportConfigCallback(new TransportConfigCallback() {
-			@Override
-			public void configure(final Transport transport) {
-				SshTransport sshTransport = (SshTransport) transport;
-				sshTransport.setSshSessionFactory(sshSessionFactory);
-			}
-		});
+		cloneCommand.setTransportConfigCallback(new SshTransportConfigCallback());
 
 		cloneCommand.setDirectory(new File(localPath));
 		try {
@@ -66,40 +64,20 @@ public class Main {
 	}
 
 	private static class SshTransportConfigCallback implements TransportConfigCallback {
+
+		@Override
+		public void configure(final Transport transport) {
+			SshTransport sshTransport = (SshTransport) transport;
+			sshTransport.setSshSessionFactory(sshSessionFactory);
+		}
 		private final SshSessionFactory sshSessionFactory = new JschConfigSessionFactory() {
-			@Override
-			protected void configure(OpenSSHConfig.Host hc, Session session) {
-				session.setConfig("StrictHostKeyChecking", "no");
-			}
 
 			@Override
 			protected JSch createDefaultJSch(FS fs) throws JSchException {
-				JSch jSch = super.createDefaultJSch(fs);
-				byte[] privateKeyPEM = null;
-
-				try {
-					KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-
-					List<String> lines = Files.readAllLines(Paths.get("<my_key>.pem"), StandardCharsets.US_ASCII);
-					PKCS8EncodedKeySpec privSpec = new PKCS8EncodedKeySpec(
-							Base64.getDecoder().decode(String.join("", lines)));
-					RSAPrivateKey privKey = (RSAPrivateKey) keyFactory.generatePrivate(privSpec);
-
-					PKCS8Generator pkcs8 = new PKCS8Generator(privKey);
-
-					StringWriter writer = new StringWriter();
-					PemWriter pemWriter = new PemWriter(writer);
-					pemWriter.writeObject(pkcs8);
-
-					privateKeyPEM = writer.toString().getBytes("US-ASCII");
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-				jSch.addIdentity("git", privateKeyPEM, null, null);
-
-				return jSch;
+				JSch defaultJSch = super.createDefaultJSch(fs);
+				defaultJSch.removeAllIdentity();
+				defaultJSch.addIdentity("~/doc/privatekey.ppk");
+				return defaultJSch;
 			}
 		};
 	}

@@ -32,6 +32,7 @@
         </plugins>
     </build>
 
+    <!--
     <dependencies>
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
@@ -49,4 +50,5 @@
             <version>0.2.20</version>
         </dependency>
     </dependencies>
+    -->
 </project>

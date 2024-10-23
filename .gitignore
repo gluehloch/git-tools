@@ -3,3 +3,6 @@ classes
 
 # IntelliK
 .idea/
+
+# VSCode
+.vscode/
