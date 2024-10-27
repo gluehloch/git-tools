@@ -1,0 +1,30 @@
+warning: in the working copy of 'demo/src/main/java/com/example/Main.java', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/demo/src/main/java/com/example/Main.java b/demo/src/main/java/com/example/Main.java[m
+[1mindex b1db1c6..c46a9c6 100644[m
+[1m--- a/demo/src/main/java/com/example/Main.java[m
+[1m+++ b/demo/src/main/java/com/example/Main.java[m
+[36m@@ -30,10 +30,13 @@[m [mimport org.eclipse.jgit.util.FS;[m
+ public class Main {[m
+     public static void main(String[] args) {[m
+         System.out.println("Hello world!");[m
+[32m+[m		[32mMain main = new Main();[m
+[32m+[m			[32m// "E:\\development\\projects\\tmp",[m
+[32m+[m			[32m// "git@github.com:gluehloch/java-examples.wiki.git"[m
+[32m+[m			[32m // "https://github.com/gluehloch/java-examples.wiki.git"[m
+[32m+[m			[32mmain.loadRepo( "E:\\development\\projects\\tmp\\wiki.git", "git@github.com:gluehloch/java-examples.wiki.git", "xxx");[m
+     }[m
+ [m
+[31m-	public Main(final String localPath, final String remotePath) {	}[m
+[31m-[m
+ 	public void loadRepo(final String localPath, final String remotePath, final String password) {[m
+ 		SshSessionFactory sshSessionFactory = new JschConfigSessionFactory() {[m
+ 			@Override[m
+[36m@@ -76,7 +79,7 @@[m [mpublic class Main {[m
+ 			protected JSch createDefaultJSch(FS fs) throws JSchException {[m
+ 				JSch defaultJSch = super.createDefaultJSch(fs);[m
+ 				defaultJSch.removeAllIdentity();[m
+[31m-				defaultJSch.addIdentity("~/doc/privatekey.ppk");[m
+[32m+[m				[32mdefaultJSch.addIdentity("~/.ssh/id_rsa_github");[m
+ 				return defaultJSch;[m
+ 			}[m
+ 		};[m

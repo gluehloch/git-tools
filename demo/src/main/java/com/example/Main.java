@@ -19,6 +19,8 @@ import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.TransportConfigCallback;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.internal.storage.file.FileRepository;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.Transport;
 // import org.eclipse.jgit.transport.OpenSshConfig;
 import org.eclipse.jgit.transport.SshSessionFactory;
@@ -30,11 +32,15 @@ import org.eclipse.jgit.util.FS;
 public class Main {
     public static void main(String[] args) {
         System.out.println("Hello world!");
+		Main main = new Main();
+			// "E:\\development\\projects\\tmp",
+			// "git@github.com:gluehloch/java-examples.wiki.git"
+			 // "https://github.com/gluehloch/java-examples.wiki.git"
+			main.clone( "E:\\development\\projects\\tmp\\wiki.git", "git@github.com:gluehloch/java-examples.wiki.git");
     }
 
-	public Main(final String localPath, final String remotePath) {	}
-
-	public void loadRepo(final String localPath, final String remotePath, final String password) {
+	public void clone(final String localPath, final String remotePath) {
+		/*
 		SshSessionFactory sshSessionFactory = new JschConfigSessionFactory() {
 			@Override
 			protected JSch createDefaultJSch(final FS fs) throws JSchException {
@@ -50,6 +56,7 @@ public class Main {
 				session.setConfig("StrictHostKeyChecking", "no");
 			};
 		};
+		 */
 
 		CloneCommand cloneCommand = Git.cloneRepository();
 		cloneCommand.setURI(remotePath);
@@ -60,6 +67,17 @@ public class Main {
 			cloneCommand.call();
 		} catch (GitAPIException e) {
 			e.printStackTrace();
+		}
+	}
+
+	public void pull(final String localPath) {
+		try {
+			Repository localRepo = new FileRepository(localPath + "/.git");
+			Git git = new Git(localRepo);
+			git.pull().setTransportConfigCallback(new SshTransportConfigCallback()).call();
+			git.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 
@@ -76,7 +94,7 @@ public class Main {
 			protected JSch createDefaultJSch(FS fs) throws JSchException {
 				JSch defaultJSch = super.createDefaultJSch(fs);
 				defaultJSch.removeAllIdentity();
-				defaultJSch.addIdentity("~/doc/privatekey.ppk");
+				defaultJSch.addIdentity("~/.ssh/id_rsa_github");
 				return defaultJSch;
 			}
 		};
