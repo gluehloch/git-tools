@@ -10,7 +10,7 @@
     </parent>    
 
     <groupId>de.awtools.git</groupId>
-    <artifactId>git-springboot</artifactId>
+    <artifactId>springboot</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -47,7 +47,7 @@
 
         <dependency>
             <groupId>de.awtools.git</groupId>
-            <artifactId>git-browser</artifactId>
+            <artifactId>browser</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
