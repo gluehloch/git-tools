@@ -3,12 +3,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.awtools</groupId>
+    <groupId>de.awtools.git</groupId>
     <artifactId>git</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
         <module>git-command</module>
+        <module>git-browser</module>
+        <module>git-springboot</module>
     </modules>
 
     <properties>
