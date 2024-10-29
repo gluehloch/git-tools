@@ -12,6 +12,7 @@
 * Markdown Integration in meine Web-Seite
   * Java Wiki mit verschiedenen Texten als GIT Repository.
   * ...  
+* Wie wird die Seitenstruktur definiert?`Bzw. wie die einzelnen Dateien einbinden?
 
 ## Architektur
 * GIT Repository mit Lucene Index
@@ -21,4 +22,4 @@
   * Liegt der Vorgang in der DB oder als Datei im GIT Repo?
     * Datei: JSON Struktur, Referenzen auf Dokumente
     * SQL, relational: Keine Versionierung wie in GIT. Müsste selbst
-      implementiert werden. 
+      implementiert werden.
