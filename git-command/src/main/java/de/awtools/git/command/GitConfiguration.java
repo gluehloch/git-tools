@@ -1,5 +1,7 @@
 package de.awtools.git.command;
 
+import org.springframework.context.annotation.Configuration;
+
 @Configuration
 public class GitConfiguration {
 
