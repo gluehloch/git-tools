@@ -39,10 +39,10 @@ public class GitRepositoryBrowser {
         } else if (file.exists()) {
             try {
                 System.out.println("File: " + file.getAbsolutePath());
-                
+
                 Optional<MediaType> mimeTypeOptional = MediaTypeFactory.getMediaType(file.getName());
                 InputStream is = new FileInputStream(file);
-                return ResponseEntity.ok().contentType(mimeTypeOptional.get()).body(new InputStreamResource(is));
+                return ResponseEntity.ok().contentType(mimeTypeOptional.orElse(MediaType.TEXT_PLAIN)).body(new InputStreamResource(is));
             } catch (FileNotFoundException ex) {
                 ex.printStackTrace();
             }
