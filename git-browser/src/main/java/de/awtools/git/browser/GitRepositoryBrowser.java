@@ -32,7 +32,13 @@ public class GitRepositoryBrowser {
     @GetMapping("/browse")
     @ResponseBody
     public ResponseEntity<InputStreamResource> browse(@RequestParam("path") String path) {
+        final var normalizedRepositoryPath = Path.of(repositoryPath).toAbsolutePath().normalize();
         final var filePath = Path.of(repositoryPath, path);
+        final var normalizedPath = filePath.toAbsolutePath().normalize();
+        if (!normalizedPath.startsWith(normalizedRepositoryPath)) {
+            return ResponseEntity.badRequest().build();
+        }
+        
         final var file = filePath.toFile();
         if (file.isDirectory()) {
 
