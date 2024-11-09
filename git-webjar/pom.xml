@@ -12,6 +12,7 @@
     <groupId>de.awtools.git</groupId>
     <artifactId>git-webjar</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
 
     <dependencies>
         <dependency>
