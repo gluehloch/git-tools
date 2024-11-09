@@ -26,20 +26,22 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/repository")
 public class GitRepositoryBrowser {
 
-    @Value("${de.awtools.git.browser.repository.path}")
-    private String repositoryPath;
+    private final GitRepositoryGate repository;
+
+    public GitRepositoryBrowser(GitRepositoryGate repository) {
+        this.repository = repository;
+    }
 
     @GetMapping("/browse")
     @ResponseBody
     public ResponseEntity<InputStreamResource> browse(@RequestParam("path") String path) {
-        final var normalizedRepositoryPath = Path.of(repositoryPath).toAbsolutePath().normalize();
-        final var filePath = Path.of(repositoryPath, path);
-        final var normalizedPath = filePath.toAbsolutePath().normalize();
-        if (!normalizedPath.startsWith(normalizedRepositoryPath)) {
+        final var resolvedPath = repository.resolve(path);
+
+        if (resolvedPath.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
         
-        final var file = filePath.toFile();
+        final var file = resolvedPath.get().toFile();
         if (file.isDirectory()) {
 
         } else if (file.exists()) {
