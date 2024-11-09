@@ -24,6 +24,7 @@ class GitRepositoryConfigurationTest {
     void gitRepositoryConfiguration() {
         assertThat(gitRepositoryConfiguration).isNotNull();
         assertThat(gitRepositoryConfiguration.getRepositoryPath()).isNotNull();
+        // TODO Wie sehen die Tests unter Linux aus?
         System.out.println(gitRepositoryConfiguration.getRepositoryPath());
         System.out.println(gitRepositoryGate.resolve("home.md"));
         System.out.println(gitRepositoryGate.resolve("../../../home.md")); // Optional.empty
