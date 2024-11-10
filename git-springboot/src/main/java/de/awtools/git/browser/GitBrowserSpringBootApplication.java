@@ -15,5 +15,4 @@ public class GitBrowserSpringBootApplication {
         SpringApplication.run(GitBrowserSpringBootApplication.class, args);
     }
     
-
 }

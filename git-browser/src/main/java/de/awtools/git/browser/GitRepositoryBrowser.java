@@ -4,27 +4,28 @@ import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.nio.file.Path;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.MediaTypeFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
+import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/repository")
 public class GitRepositoryBrowser {
+
+    private static Logger LOG = LoggerFactory.getLogger(GitRepositoryBrowser.class);
 
     private final GitRepositoryGate repository;
 
@@ -40,13 +41,13 @@ public class GitRepositoryBrowser {
         if (resolvedPath.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        
+
         final var file = resolvedPath.get().toFile();
         if (file.isDirectory()) {
 
         } else if (file.exists()) {
             try {
-                System.out.println("File: " + file.getAbsolutePath());
+                LOG.atDebug().log("File: {}", file.getAbsolutePath());
 
                 Optional<MediaType> mimeTypeOptional = MediaTypeFactory.getMediaType(file.getName());
                 InputStream is = new FileInputStream(file);
@@ -56,7 +57,7 @@ public class GitRepositoryBrowser {
             }
         }
         ByteArrayInputStream is = new ByteArrayInputStream(ZonedDateTime.now().toString().getBytes());
-        return  ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(new InputStreamResource(is));
+        return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(new InputStreamResource(is));
     }
 
 }

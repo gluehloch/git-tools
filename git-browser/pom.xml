@@ -9,9 +9,7 @@
           <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>de.awtools.git</groupId>
     <artifactId>browser</artifactId>
-    <version>1.0-SNAPSHOT</version>
 
     <dependencies>
         <!-- Spring Web Framework -->
@@ -31,6 +29,14 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Testing -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
