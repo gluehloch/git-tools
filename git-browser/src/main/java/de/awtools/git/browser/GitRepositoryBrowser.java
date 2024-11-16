@@ -56,8 +56,11 @@ public class GitRepositoryBrowser {
                 LOG.atError().setCause(ex).log("File note found:");
             }
         }
-        ByteArrayInputStream is = new ByteArrayInputStream(ZonedDateTime.now().toString().getBytes());
-        return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(new InputStreamResource(is));
+        return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(new InputStreamResource(toDefaultTime()));
+    }
+
+    private InputStream toDefaultTime() {
+        return new ByteArrayInputStream(ZonedDateTime.now().toString().getBytes());
     }
 
 }
