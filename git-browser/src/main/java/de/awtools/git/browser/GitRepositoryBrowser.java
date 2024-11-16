@@ -53,7 +53,7 @@ public class GitRepositoryBrowser {
                 InputStream is = new FileInputStream(file);
                 return ResponseEntity.ok().contentType(mimeTypeOptional.orElse(MediaType.TEXT_PLAIN)).body(new InputStreamResource(is));
             } catch (FileNotFoundException ex) {
-                ex.printStackTrace();
+                LOG.atError().setCause(ex).log("File note found:");
             }
         }
         ByteArrayInputStream is = new ByteArrayInputStream(ZonedDateTime.now().toString().getBytes());
