@@ -29,8 +29,13 @@ public class GitRepositoryBrowser {
 
     private final GitRepositoryGate repository;
 
-    public GitRepositoryBrowser(GitRepositoryGate repository) {
+    private final GitRepositoryConfiguration gitConfiguration;
+
+    public GitRepositoryBrowser(
+            final GitRepositoryGate repository,
+            final GitRepositoryConfiguration gitConfiguration) {
         this.repository = repository;
+        this.gitConfiguration = gitConfiguration;
     }
 
     @GetMapping("/browse")
