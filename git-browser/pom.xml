@@ -12,12 +12,6 @@
     <artifactId>browser</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>de.awtools.git</groupId>
-            <artifactId>git-command</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
         <!-- Spring Web Framework -->
         <dependency>
             <groupId>org.springframework</groupId>
