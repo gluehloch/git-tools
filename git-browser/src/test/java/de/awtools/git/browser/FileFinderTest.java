@@ -16,9 +16,9 @@ class FileFinderTest {
         File file = new File(resource.getFile());
         File file2 = FileFinder.findFile("plaintext.txt", file.getParentFile());
         assertThat(file2).isNotNull();
-        
+
         File file3 = FileFinder.findFile("findme.md", file.getParentFile());
-        assertThat(file3).isNotNull();        
+        assertThat(file3).isNotNull();
     }
 
 }
