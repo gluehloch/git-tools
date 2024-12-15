@@ -14,6 +14,10 @@ public class GitRepositoryGate {
         this.gitRepositoryConfiguration = gitRepositoryConfiguration;
     }
 
+    public Path rootPath() {
+        return gitRepositoryConfiguration.getRepositoryPath();
+    }
+
     public Optional<Path> resolve(String path) {
         final var filePath = gitRepositoryConfiguration.getRepositoryPath().resolve(path);
         final var normalizedPath = filePath.toAbsolutePath().normalize();

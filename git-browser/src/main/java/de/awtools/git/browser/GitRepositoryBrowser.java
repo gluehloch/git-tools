@@ -1,6 +1,7 @@
 package de.awtools.git.browser;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -29,13 +30,8 @@ public class GitRepositoryBrowser {
 
     private final GitRepositoryGate repository;
 
-    private final GitRepositoryConfiguration gitConfiguration;
-
-    public GitRepositoryBrowser(
-            final GitRepositoryGate repository,
-            final GitRepositoryConfiguration gitConfiguration) {
+    public GitRepositoryBrowser(final GitRepositoryGate repository) {
         this.repository = repository;
-        this.gitConfiguration = gitConfiguration;
     }
 
     @GetMapping("/browse")
@@ -47,9 +43,23 @@ public class GitRepositoryBrowser {
             return ResponseEntity.badRequest().build();
         }
 
-        final var file = resolvedPath.get().toFile();
-        if (file.isDirectory()) {
+        return toResource(resolvedPath.get().toFile());
+    }
 
+    @GetMapping("/find")
+    @ResponseBody
+    public ResponseEntity<InputStreamResource> find(@RequestParam("file") String fileName) {
+        final var rootPath = repository.rootPath();
+        if (!fileName.endsWith(".md")) {
+            fileName = fileName + ".md";
+        }
+        final var file = FileFinder.findFile(fileName, rootPath.toFile());
+        return toResource(file);
+    }
+
+    private ResponseEntity<InputStreamResource> toResource(File file) {
+        if (file.isDirectory()) {
+            // TODO
         } else if (file.exists()) {
             try {
                 LOG.atDebug().log("File: {}", file.getAbsolutePath());
