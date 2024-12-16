@@ -13,10 +13,12 @@ import org.eclipse.jgit.transport.SshTransport;
 import org.eclipse.jgit.transport.Transport;
 import org.eclipse.jgit.transport.ssh.jsch.JschConfigSessionFactory;
 import org.eclipse.jgit.util.FS;
+import org.springframework.stereotype.Component;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 
+@Component
 public class GitCommand {
 
     public void clone(final String localPath, final String remotePath) {
