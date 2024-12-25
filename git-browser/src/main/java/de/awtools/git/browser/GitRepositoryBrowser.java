@@ -39,11 +39,9 @@ public class GitRepositoryBrowser {
     public ResponseEntity<InputStreamResource> browse(@RequestParam("path") String path) {
         final var resolvedPath = repository.resolve(path);
 
-        if (resolvedPath.isEmpty()) {
-            return ResponseEntity.badRequest().build();
-        }
+        return resolvedPath.map(value -> toResource(value.toFile()))
+                .orElseGet(() -> ResponseEntity.badRequest().build());
 
-        return toResource(resolvedPath.get().toFile());
     }
 
     @GetMapping("/find")
@@ -58,20 +56,24 @@ public class GitRepositoryBrowser {
     }
 
     private ResponseEntity<InputStreamResource> toResource(File file) {
-        if (file.isDirectory()) {
-            // TODO
+        if (file == null || file.isDirectory()) {
+            return ResponseEntity.notFound().build();
         } else if (file.exists()) {
             try {
                 LOG.atDebug().log("File: {}", file.getAbsolutePath());
 
                 Optional<MediaType> mimeTypeOptional = MediaTypeFactory.getMediaType(file.getName());
                 InputStream is = new FileInputStream(file);
-                return ResponseEntity.ok().contentType(mimeTypeOptional.orElse(MediaType.TEXT_PLAIN)).body(new InputStreamResource(is));
+                return ResponseEntity.ok().contentType(mimeTypeOptional.orElse(MediaType.TEXT_PLAIN))
+                        .body(new InputStreamResource(is));
             } catch (FileNotFoundException ex) {
-                LOG.atError().setCause(ex).log("File note found:");
+                LOG.atError().setCause(ex).log("File not found:");
+                return ResponseEntity.notFound().build();
             }
+        } else {
+            // Was ist das für ein Fall?!
+            return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(new InputStreamResource(toDefaultTime()));
         }
-        return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(new InputStreamResource(toDefaultTime()));
     }
 
     private InputStream toDefaultTime() {
