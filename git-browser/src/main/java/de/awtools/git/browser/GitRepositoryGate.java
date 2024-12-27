@@ -28,7 +28,7 @@ public class GitRepositoryGate {
         final var normalizedPath = filePath.toAbsolutePath().normalize();
 
         // TODO Update variable...
-        //gitCommand.clone("...", "...");
+        gitCommand.pull(filePath.toString());
 
         if (normalizedPath.startsWith(gitRepositoryConfiguration.getRepositoryPath())) {
             return Optional.of(normalizedPath);
