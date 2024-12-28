@@ -1,6 +1,10 @@
 package de.awtools.git.browser;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileFinder {
 
@@ -22,6 +26,18 @@ public class FileFinder {
             }
         }
         return found;
+    }
+
+    public static List<Content> collectFiles(Path directory) throws Exception {
+        List<Content> contents = new ArrayList<>();
+        Files.walk(directory).forEach(path -> collectFiles(path.toFile(), contents));
+        return contents;
+    }
+
+    public static void collectFiles(File file, List<Content> contents) {
+        if (!file.isDirectory() && !file.getAbsolutePath().contains(IGNORE)) {
+            contents.add(new Content(file.getParent(), file.getName()));
+        }
     }
 
 }

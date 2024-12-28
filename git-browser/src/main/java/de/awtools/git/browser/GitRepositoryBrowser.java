@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -32,6 +33,17 @@ public class GitRepositoryBrowser {
 
     public GitRepositoryBrowser(final GitRepositoryGate repository) {
         this.repository = repository;
+    }
+
+    @GetMapping("/index")
+    public ResponseEntity<List<Content>> index() throws Exception {
+        return ResponseEntity.ok(FileFinder.collectFiles(repository.rootPath()));
+    }
+
+    @GetMapping("/pull")
+    public ResponseEntity<Void> pull() {
+        repository.pull();
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/browse")

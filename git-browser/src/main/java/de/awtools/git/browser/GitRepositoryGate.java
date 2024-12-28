@@ -23,12 +23,13 @@ public class GitRepositoryGate {
         return gitRepositoryConfiguration.getRepositoryPath();
     }
 
+    public void pull() {
+        gitCommand.pull();
+    }
+
     public Optional<Path> resolve(String path) {
         final var filePath = gitRepositoryConfiguration.getRepositoryPath().resolve(path);
         final var normalizedPath = filePath.toAbsolutePath().normalize();
-
-        // TODO Update variable...
-        gitCommand.pull();
 
         if (normalizedPath.startsWith(gitRepositoryConfiguration.getRepositoryPath())) {
             return Optional.of(normalizedPath);
