@@ -6,7 +6,6 @@ import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.TransportConfigCallback;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
@@ -28,6 +27,12 @@ import com.jcraft.jsch.JSchException;
 
 @Component
 public class GitCommand {
+
+    private final GitRepositoryConfiguration gitRepositoryConfiguration;
+
+    public GitCommand(GitRepositoryConfiguration gitRepositoryConfiguration) {
+        this.gitRepositoryConfiguration = gitRepositoryConfiguration;
+    }
 
     public void clone(final String localPath, final String remotePath) {
         /*
@@ -60,10 +65,20 @@ public class GitCommand {
         }
     }
 
-    public void pull(final String localPath) {
+    public void pull() {
         try {
-            Repository localRepo = new FileRepository(localPath + "/.git");
-            Git git = new Git(localRepo);
+            //            FileRepositoryBuilder builder = new FileRepositoryBuilder();
+            //            Repository repository = builder.setGitDir(gitRepositoryConfiguration.getRepositoryPath().toFile())
+            //                    .readEnvironment() // scan environment GIT_* variables
+            //                    .findGitDir() // scan up the file system tree
+            //                    .build();
+
+            Git git = Git.open(gitRepositoryConfiguration.getRepositoryPath().toFile());
+            // the Ref holds an ObjectId for any type of object (tree, commit, blob, tree)
+            // Ref head = repository.exactRef("refs/heads/master");
+            //System.out.println("Ref of refs/heads/master: " + head);
+
+            // Git git = new Git(repository);
             git.pull().setTransportConfigCallback(new SshTransportConfigCallback()).call();
             git.close();
         } catch (Exception ex) {

@@ -6,12 +6,12 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 import de.awtools.git.command.GitCommand;
+import de.awtools.git.command.GitRepositoryConfiguration;
 
 @Component
 public class GitRepositoryGate {
 
     private final GitRepositoryConfiguration gitRepositoryConfiguration;
-
     private final GitCommand gitCommand;
 
     public GitRepositoryGate(GitRepositoryConfiguration gitRepositoryConfiguration, GitCommand gitCommand) {
@@ -28,7 +28,7 @@ public class GitRepositoryGate {
         final var normalizedPath = filePath.toAbsolutePath().normalize();
 
         // TODO Update variable...
-        gitCommand.pull(filePath.toString());
+        gitCommand.pull();
 
         if (normalizedPath.startsWith(gitRepositoryConfiguration.getRepositoryPath())) {
             return Optional.of(normalizedPath);

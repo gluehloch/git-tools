@@ -1,4 +1,4 @@
-package de.awtools.git.browser;
+package de.awtools.git.command;
 
 import java.nio.file.Path;
 
