@@ -1,4 +1,4 @@
-# Document Managemenet for me DMFM
+# Document Management for me DMFM
 
 * Datenversionierung mit GIT
 * Apache Lucene zur Indexierung und Suche
