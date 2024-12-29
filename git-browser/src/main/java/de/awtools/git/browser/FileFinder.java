@@ -6,6 +6,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.awtools.git.browser.Content.Type;
+
 public class FileFinder {
 
     private static final String IGNORE = ".git";
@@ -36,8 +38,20 @@ public class FileFinder {
 
     public static void collectFiles(File file, List<Content> contents) {
         if (!file.isDirectory() && !file.getAbsolutePath().contains(IGNORE)) {
-            contents.add(new Content(file.getParent(), file.getName()));
+            contents.add(new Content(file.getParent(), file.getName(), toType(file.getName())));
         }
+    }
+
+    public static Type toType(String fileName) {
+        final var fileNameLowerCase = fileName.toLowerCase();
+        if (fileNameLowerCase.endsWith("md")) {
+            return Type.MARKDOWN;
+        } else if (fileNameLowerCase.endsWith("png")) {
+            return Type.PNG;
+        } else if (fileNameLowerCase.endsWith("txt")) {
+            return Type.TXT;
+        }
+        return Type.UNKNWON;
     }
 
 }
