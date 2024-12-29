@@ -39,6 +39,9 @@ public class FileFinder {
     public static void collectFiles(Path directory, File file, List<Content> contents) {
         if (!file.isDirectory() && !file.getAbsolutePath().contains(IGNORE)) {
             String parentPath = file.getParent().substring(directory.toString().length());
+            if (parentPath != null) {
+                parentPath = parentPath.replace("\\", "/");
+            }
             contents.add(new Content(parentPath, file.getName(), toType(file.getName())));
         }
     }
