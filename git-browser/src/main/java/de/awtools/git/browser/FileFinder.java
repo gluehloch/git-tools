@@ -32,13 +32,14 @@ public class FileFinder {
 
     public static List<Content> collectFiles(Path directory) throws Exception {
         List<Content> contents = new ArrayList<>();
-        Files.walk(directory).forEach(path -> collectFiles(path.toFile(), contents));
+        Files.walk(directory).forEach(path -> collectFiles(directory, path.toFile(), contents));
         return contents;
     }
 
-    public static void collectFiles(File file, List<Content> contents) {
+    public static void collectFiles(Path directory, File file, List<Content> contents) {
         if (!file.isDirectory() && !file.getAbsolutePath().contains(IGNORE)) {
-            contents.add(new Content(file.getParent(), file.getName(), toType(file.getName())));
+            String parentPath = file.getParent().substring(directory.toString().length());
+            contents.add(new Content(parentPath, file.getName(), toType(file.getName())));
         }
     }
 
