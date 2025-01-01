@@ -20,6 +20,8 @@ import org.eclipse.jgit.transport.ssh.jsch.JschConfigSessionFactory;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.eclipse.jgit.util.FS;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.jcraft.jsch.JSch;
@@ -28,6 +30,8 @@ import com.jcraft.jsch.JSchException;
 @Component
 public class GitCommand {
 
+    private static final Logger LOG = LoggerFactory.getLogger(GitCommand.class);
+
     private final GitRepositoryConfiguration gitRepositoryConfiguration;
 
     public GitCommand(GitRepositoryConfiguration gitRepositoryConfiguration) {
@@ -35,54 +39,25 @@ public class GitCommand {
     }
 
     public void clone(final String localPath, final String remotePath) {
-        /*
-        SshSessionFactory sshSessionFactory = new JschConfigSessionFactory() {
-        	@Override
-        	protected JSch createDefaultJSch(final FS fs) throws JSchException {
-        		JSch defaultJSch = super.createDefaultJSch(fs);
-        		defaultJSch.removeAllIdentity();
-        		defaultJSch.addIdentity("~/doc/privatekey.ppk");
-        		return defaultJSch;
-        	}
-        
-        	@Override
-        	protected void configure(final Host hc, final Session session) {
-        		session.setPassword(password);
-        		session.setConfig("StrictHostKeyChecking", "no");
-        	};
-        };
-         */
-
         CloneCommand cloneCommand = Git.cloneRepository();
         cloneCommand.setURI(remotePath);
         cloneCommand.setTransportConfigCallback(new SshTransportConfigCallback());
-
         cloneCommand.setDirectory(new File(localPath));
-        try {
+
+        try (Git git = cloneCommand.call()) {
             cloneCommand.call();
-        } catch (GitAPIException e) {
-            e.printStackTrace();
+        } catch (GitAPIException ex) {
+            LOG.error("Error cloning repository", ex);
+            throw new RuntimeException(ex);
         }
     }
 
     public void pull() {
-        try {
-            //            FileRepositoryBuilder builder = new FileRepositoryBuilder();
-            //            Repository repository = builder.setGitDir(gitRepositoryConfiguration.getRepositoryPath().toFile())
-            //                    .readEnvironment() // scan environment GIT_* variables
-            //                    .findGitDir() // scan up the file system tree
-            //                    .build();
-
-            Git git = Git.open(gitRepositoryConfiguration.getRepositoryPath().toFile());
-            // the Ref holds an ObjectId for any type of object (tree, commit, blob, tree)
-            // Ref head = repository.exactRef("refs/heads/master");
-            //System.out.println("Ref of refs/heads/master: " + head);
-
-            // Git git = new Git(repository);
+        try (Git git = Git.open(gitRepositoryConfiguration.getRepositoryPath().toFile())) {
             git.pull().setTransportConfigCallback(new SshTransportConfigCallback()).call();
-            git.close();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            LOG.error("Error pulling repository", ex);
+            throw new RuntimeException(ex);
         }
     }
 
