@@ -21,4 +21,13 @@ class FileFinderTest {
         assertThat(file3).isNotNull();
     }
 
+    @Test
+    void replaceFileEnding() {
+        assertThat(FileFinder.replaceEnding("dasisteintest.txt")).isEqualTo("dasisteintest.jsonx");
+        assertThat(FileFinder.replaceEnding("dasisteintest.jsonx")).isEqualTo("dasisteintest.jsonx");
+        assertThat(FileFinder.replaceEnding("dasisteintest.json")).isEqualTo("dasisteintest.jsonx");
+        assertThat(FileFinder.replaceEnding("dasisteintest.md")).isEqualTo("dasisteintest.jsonx");
+        assertThat(FileFinder.replaceEnding("dasisteintest.xml")).isEqualTo("dasisteintest.jsonx");
+    }
+
 }

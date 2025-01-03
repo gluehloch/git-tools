@@ -2,10 +2,13 @@ package de.awtools.git.browser;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Content {
 
     public static enum Type {
-        TXT, MARKDOWN, PNG, UNKNWON;
+        JSON, TXT, MARKDOWN, PNG, UNKNWON;
     }
 
     public static enum Status {
@@ -19,7 +22,14 @@ public class Content {
     private final Type type;
     private final Status status;
 
-    public Content(String name, String shortName, String path, String fileName, Type type, Status status) {
+    @JsonCreator
+    public Content(
+            @JsonProperty("name") String name,
+            @JsonProperty("shortName") String shortName,
+            @JsonProperty("path") String path,
+            @JsonProperty("fileName") String fileName,
+            @JsonProperty("type") Type type,
+            @JsonProperty("status") Status status) {
         this.name = name;
         this.shortName = shortName;
         this.path = path;
