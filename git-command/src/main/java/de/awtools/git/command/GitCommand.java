@@ -1,6 +1,7 @@
 package de.awtools.git.command;
 
 import java.io.File;
+import java.io.OutputStream;
 
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
@@ -61,31 +62,26 @@ public class GitCommand {
         }
     }
 
-    public static void treeFinder(final Repository repository) throws Exception {
-        // find the HEAD
+    public static void treeFinder(final Repository repository, final String pathFilter, final OutputStream out) throws Exception {
         ObjectId lastCommitId = repository.resolve(Constants.HEAD);
 
         // a RevWalk allows to walk over commits based on some filtering that is defined
         try (RevWalk revWalk = new RevWalk(repository)) {
             RevCommit commit = revWalk.parseCommit(lastCommitId);
-            // and using commit's tree find the path
             RevTree tree = commit.getTree();
-            System.out.println("Having tree: " + tree);
-
-            // now try to find a specific file
             try (TreeWalk treeWalk = new TreeWalk(repository)) {
                 treeWalk.addTree(tree);
                 treeWalk.setRecursive(true);
-                treeWalk.setFilter(PathFilter.create("README.md"));
+                treeWalk.setFilter(PathFilter.create(pathFilter));
                 if (!treeWalk.next()) {
-                    throw new IllegalStateException("Did not find expected file 'README.md'");
+                    throw new IllegalStateException("Did not find expected file '%s'".formatted(pathFilter));
                 }
 
                 ObjectId objectId = treeWalk.getObjectId(0);
                 ObjectLoader loader = repository.open(objectId);
 
                 // and then one can the loader to read the file
-                loader.copyTo(System.out);
+                loader.copyTo(out);
             }
 
             revWalk.dispose();
