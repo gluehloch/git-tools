@@ -33,6 +33,7 @@
                     <source>21</source>
                     <target>21</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
+                    <parameters>true</parameters>
                 </configuration>
             </plugin>
         </plugins>
