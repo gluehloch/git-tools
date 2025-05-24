@@ -1,1 +1,12 @@
 GET http://localhost:8080/repository/index
+
+###
+
+GET http://localhost:8080/repository/browse
+
+###
+
+GET http://localhost:8080/repository/find?file=home
+
+###
+
