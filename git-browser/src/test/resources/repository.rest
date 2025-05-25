@@ -9,4 +9,15 @@ GET http://localhost:8080/repository/browse
 GET http://localhost:8080/repository/find?file=home
 
 ###
+GET http://gluehloch.de/git/repository/pull
 
+###
+
+GET http://gluehloch.de/git/repository/index
+
+### 
+GET https://gluehloch.de/git/repository/find?file=assertj-list-assertion
+
+###
+
+GET https://gluehloch.de/git/repository/browse?path=angular-json-zeitzonen.md
