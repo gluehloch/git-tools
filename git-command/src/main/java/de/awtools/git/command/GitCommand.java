@@ -88,7 +88,7 @@ public class GitCommand {
         }
     }
 
-    private static class SshTransportConfigCallback implements TransportConfigCallback {
+    private class SshTransportConfigCallback implements TransportConfigCallback {
 
         @Override
         public void configure(final Transport transport) {
@@ -102,7 +102,7 @@ public class GitCommand {
             protected JSch createDefaultJSch(FS fs) throws JSchException {
                 JSch defaultJSch = super.createDefaultJSch(fs);
                 defaultJSch.removeAllIdentity();
-                defaultJSch.addIdentity("~/.ssh/id_rsa_github");
+                defaultJSch.addIdentity(gitRepositoryConfiguration.getPrivateKeyPath().toString());
                 return defaultJSch;
             }
         };
