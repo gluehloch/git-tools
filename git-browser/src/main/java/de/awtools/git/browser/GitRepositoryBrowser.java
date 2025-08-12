@@ -51,7 +51,8 @@ public class GitRepositoryBrowser {
     public ResponseEntity<InputStreamResource> browse(@RequestParam("path") String path) {
         final var resolvedPath = repository.resolve(path);
 
-        return resolvedPath.map(value -> toResource(value.toFile()))
+        return resolvedPath
+                .map(value -> toResource(value.toFile()))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
 
     }
@@ -76,7 +77,9 @@ public class GitRepositoryBrowser {
 
                 Optional<MediaType> mimeTypeOptional = MediaTypeFactory.getMediaType(file.getName());
                 InputStream is = new FileInputStream(file);
-                return ResponseEntity.ok().contentType(mimeTypeOptional.orElse(MediaType.TEXT_PLAIN))
+                return ResponseEntity
+                        .ok()
+                        .contentType(mimeTypeOptional.orElse(MediaType.TEXT_PLAIN))
                         .body(new InputStreamResource(is));
             } catch (FileNotFoundException ex) {
                 LOG.atError().setCause(ex).log("File not found:");
