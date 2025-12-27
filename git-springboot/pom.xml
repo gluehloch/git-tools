@@ -16,6 +16,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>3.5.9</version>
             </plugin>
         </plugins>
     </build>
@@ -26,7 +27,7 @@
                 <!-- Import dependency management from Spring Boot -->
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>3.2.10</version>
+                <version>3.5.9</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
