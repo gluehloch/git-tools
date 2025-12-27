@@ -23,8 +23,8 @@ public class GitRepositoryGate {
         return gitRepositoryConfiguration.getRepositoryPath();
     }
 
-    public void pull() {
-        gitCommand.pull();
+    public boolean pull() {
+        return gitCommand.pull();
     }
 
     public Optional<Path> resolve(String path) {

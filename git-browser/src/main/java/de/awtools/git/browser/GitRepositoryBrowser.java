@@ -41,9 +41,12 @@ public class GitRepositoryBrowser {
     }
 
     @GetMapping("/pull")
-    public ResponseEntity<Void> pull() {
-        repository.pull();
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Boolean> pull() {
+        final boolean successful = repository.pull();
+        if (successful) {
+        	return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @GetMapping("/browse")

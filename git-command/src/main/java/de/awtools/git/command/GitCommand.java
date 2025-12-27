@@ -5,6 +5,7 @@ import java.io.OutputStream;
 
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.PullResult;
 import org.eclipse.jgit.api.TransportConfigCallback;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
@@ -45,17 +46,17 @@ public class GitCommand {
         cloneCommand.setTransportConfigCallback(new SshTransportConfigCallback());
         cloneCommand.setDirectory(new File(localPath));
 
-        try (Git git = cloneCommand.call()) {
-            cloneCommand.call();
+        try (Git _ = cloneCommand.call()) {
         } catch (GitAPIException ex) {
             LOG.error("Error cloning repository", ex);
             throw new RuntimeException(ex);
         }
     }
 
-    public void pull() {
+    public boolean pull() {
         try (Git git = Git.open(gitRepositoryConfiguration.getRepositoryPath().toFile())) {
-            git.pull().setTransportConfigCallback(new SshTransportConfigCallback()).call();
+            final PullResult pullResult = git.pull().setTransportConfigCallback(new SshTransportConfigCallback()).call();
+            return pullResult.isSuccessful();
         } catch (Exception ex) {
             LOG.error("Error pulling repository", ex);
             throw new RuntimeException(ex);
